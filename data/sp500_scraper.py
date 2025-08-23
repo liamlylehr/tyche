@@ -55,12 +55,28 @@ class sp500_wikipedia_scraper:
         with db_conn.get_connection() as conn:
             cur = conn.cursor()
 
-            cur.execute("DELETE FROM companies.sp500_companies")
-
+            # Clear existing data in the table
+            cur.execute("DELETE FROM companies.sp500_companies;")
+            # Create table if it doesn't exist
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS companies.sp500_companies (
+                    id SERIAL PRIMARY KEY,
+                    ticker VARCHAR(5),
+                    company_name TEXT,
+                    gcis_sector TEXT,
+                    gcis_subsector TEXT,
+                    hq_location TEXT,
+                    date_added TEXT,
+                    cik VARCHAR(10),
+                    year_founded TEXT
+                );
+            """)
+            
+            # Insert each company into the database
             for company in self.companies:
                 cur.execute("""
                     INSERT INTO companies.sp500_companies (ticker, company_name, gcis_sector, gcis_subsector, hq_location, date_added, cik, year_founded)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
                 """, (
                     company.ticker,
                     company.name,
@@ -73,10 +89,12 @@ class sp500_wikipedia_scraper:
                 ))
             conn.commit()
             
-            cur.execute("SELECT * FROM companies.sp500_companies")
+            # Fetch and print the saved data to verify
+            cur.execute("SELECT * FROM companies.sp500_companies;")
             sp500 = cur.fetchall()
-            print(f"Saved {len(self.companies)} companies to the database")
             print(sp500)
+            print(f"Saved {len(self.companies)} companies to the database")
+
 
     def scrape_sp500_data(self) -> List[Company]:
         """Scrape all S&P 500 company data"""
