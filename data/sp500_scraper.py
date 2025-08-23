@@ -23,7 +23,7 @@ class Company:
                 f"cik={self.cik}, year_founded={self.year_founded})")
 
 # Class to bundle functionality for scraping S&P 500 data from Wikipedia
-class sp500_wikipedia_scraper:
+class Sp500WikipediaScraper:
     def __init__(self):
         self.base_url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
         self.headers = {
@@ -133,7 +133,7 @@ class sp500_wikipedia_scraper:
     
 
 if __name__ == "__main__":
-    scraper = sp500_wikipedia_scraper()
+    scraper = Sp500WikipediaScraper()
     companies = scraper.scrape_sp500_data()
         
     print(f"Scraped {len(companies)} companies from S&P 500")
