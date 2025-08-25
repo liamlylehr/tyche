@@ -3,6 +3,27 @@ from contextlib import contextmanager
 from dotenv import load_dotenv
 import os 
 
+"""
+This module provides a class to manage database connections and execute queries.
+It uses psycopg2 to connect to a PostgreSQL database and contextlib for managing connections.
+
+To use this module:
+1) Set up a .env file with the Database connection details
+    DB_HOST=your_host
+    DB_NAME=your_database_name
+    DB_USER=your_username
+    DB_PASSWORD=your_password
+    DB_PORT=your_port (optional, defaults to 5432)
+
+2) Instantiate a DatabaseConnection object and use the `get_connection` method to obtain a connection context.
+Example usage:
+    db_conn = DatabaseConnection()
+
+    with db_conn.get_connection() as conn:
+        cur = conn.cursor()
+
+"""
+
 # Load environment variables from .env file
 load_dotenv()
 

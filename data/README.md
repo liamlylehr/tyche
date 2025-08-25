@@ -1,6 +1,6 @@
 # Tyche - Data Pipeline
 
-Managing data ingestion
+Managing data ingestion and processing
 
 ## Schemas
 
