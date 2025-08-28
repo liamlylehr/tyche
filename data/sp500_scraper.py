@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
+# import pandas as pd
 from typing import List, Dict, Optional
 from database_connection import DatabaseConnection
 
