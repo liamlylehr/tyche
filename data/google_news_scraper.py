@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from beat_captcha import CaptchaBypasser
     
 class Article:
     def __init__(self, title: str, link: str, date: str, link1: str = None, content: str = None):
@@ -73,22 +72,26 @@ class GoogleNewsScraper:
 
             link = f"https://news.google.com{link}" if link.startswith('./') else link
 
-            link1 = CaptchaBypasser.get_final_url_selenium(link)
+            # link1 = CaptchaBypasser.get_final_url_selenium(link)
             
             # Create an Article object and append to the articles list
-            article_obj = Article(title, link, date, link1)
+            article_obj = Article(title, link, date)
             self.articles.append(article_obj)
 
     def fetch_article_content(self, article: Article):
         """Fetch the full content of a given article"""
         try:
             response = requests.get(article.link)
+
             response.raise_for_status()
             article_soup = BeautifulSoup(response.content, 'html.parser')
-            paragraphs = article_soup.find_all('p')
-            content = "\n".join([self.clean_text(p.get_text()) for p in paragraphs])
-            article.content = content
-            print(content)
+            # print(response.url)
+            # paragraphs = article_soup.find_all('article')
+            with open("articles.txt", "w", encoding="utf-8") as file:
+                file.write(str(article_soup))
+            # content = "\n".join([self.clean_text(p.get_text()) for p in paragraphs])
+            # article.content = content
+            # print(content)
         except requests.RequestException as e:
             print(f"Error fetching article content: {e}")
             article.content = "Content could not be fetched."
@@ -99,11 +102,13 @@ class GoogleNewsScraper:
             self.fetch_article_content(article)
 
 if __name__ == "__main__":
-    query = "citibank"
+    query = input("Enter your search query: ")
     scraper = GoogleNewsScraper(query)
-    scraper.parse_articles(1)
+    scraper.parse_articles(5)
     scraper.fetch_all_articles_content()
 
     print(f"Found {len(scraper.articles)} articles for query '{query}':")
     for article in scraper.articles:
         print("\n", article)
+    print("-"*80)
+    print("\nDone")

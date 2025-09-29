@@ -1,0 +1,8 @@
+fastapi>=0.95.0,<1.0.0
+pydantic>=1.10.0,<2.0.0
+transformers>=4.30.0
+# google_news_scraper>=1.0.0  # Replace with the actual version if known
+uvicorn[standard]>=0.22.0
+# optimum>=1.8.0
+torch>=2.0.0  # Required for transformers if using PyTorch
+# onnxruntime>=1.15.0  # Required for ONNX models if applicable
