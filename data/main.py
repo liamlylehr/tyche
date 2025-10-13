@@ -2,14 +2,23 @@
 this class will serve as the main entry point for the daily data ingestion and processing
 """
 from fastapi import FastAPI
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-
+from pydantic import BaseModel
 from transformers import pipeline
-
 from google_news_scraper import GoogleNewsScraper
 
-app = FastAPI()
+model = None
+
+def app_lifespan(app: FastAPI):
+    global model
+    model = pipeline("sentiment-analysis", model="ProsusAI/finbert")
+    print("Model loaded successfully.")
+
+    yield
+    print("Application shutting down.")
+
+app = FastAPI(lifespan=app_lifespan)
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -19,7 +28,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-model = pipeline("text-classification", model="ProsusAI/finbert")
+# --------------------------------
 
 class SearchRequest(BaseModel):
     company_name: str
